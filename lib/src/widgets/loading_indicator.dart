@@ -35,7 +35,6 @@ class _PulseLoadingIndicatorState extends State<PulseLoadingIndicator>
         ),
         child: SvgPicture.asset(
           'assets/icon.svg', // Replace with your SVG asset path
-          color: widget.color,
           height: widget.size,
           width: widget.size,
         ),

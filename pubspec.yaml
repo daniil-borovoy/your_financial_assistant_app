@@ -31,12 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.9
   flutter_chat_ui: ^1.6.9
+  flutter_chat_types: ^3.6.2
   uuid: ^4.1.0
   path_provider: ^2.1.1
   open_filex: ^4.3.4
@@ -49,19 +46,24 @@ dependencies:
   http: ^1.1.0
   dio: ^5.3.3
   flutter_dotenv: ^5.1.0
+  get: ^4.6.6
+  flutter_speed_dial: ^7.0.0
+  csv: ^5.1.1
+  fl_chart: ^0.65.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   isar_generator: ^3.1.0+1
   build_runner: ^2.4.6
+  flutter_launcher_icons: "^0.13.1"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -77,6 +79,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icon.svg
+    - assets/csv.svg
     - .env
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

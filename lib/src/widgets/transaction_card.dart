@@ -5,9 +5,12 @@ import 'package:your_financial_assistant_app/src/pages/transaction.dart';
 class TransactionCard extends StatelessWidget {
   final Transaction transaction;
 
+  final Function() onDeleted;
+
   const TransactionCard({
     super.key,
     required this.transaction,
+    required this.onDeleted,
   });
 
   @override
@@ -26,6 +29,12 @@ class TransactionCard extends StatelessWidget {
   }
 
   _onTransactionCardTap(BuildContext context, Transaction transaction) {
-    Navigator.of(context).push(TransactionScreen.create(transaction));
+    Navigator.of(context)
+        .push(TransactionScreen.create(transaction))
+        .then((deleted) {
+      if (deleted == true) {
+        onDeleted();
+      }
+    });
   }
 }

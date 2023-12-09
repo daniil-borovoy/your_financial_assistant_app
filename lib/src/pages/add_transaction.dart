@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:your_financial_assistant_app/main.dart';
+import 'package:get/instance_manager.dart';
 import 'package:your_financial_assistant_app/src/models/transaction.dart';
+import 'package:your_financial_assistant_app/src/repos/transactions.dart';
 
 class TransactionCreationPage extends StatefulWidget {
   const TransactionCreationPage({super.key});
 
-  static create() {
-    return MaterialPageRoute(
-        builder: (context) => const TransactionCreationPage());
-  }
+  static create() => MaterialPageRoute(
+        builder: (context) => const TransactionCreationPage(),
+      );
 
   @override
   State createState() => _TransactionCreationPageState();
 }
 
 class _TransactionCreationPageState extends State<TransactionCreationPage> {
+  final transactionsRepo = Get.find<TransactionsRepo>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String title = '';
   double amount = 0.0;
   DateTime? date;
+  TransactionType transactionType = TransactionType.expense;
+  TransactionCategory transactionCategory = TransactionCategory.none;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Добавление транзакции'),
+        title: const Text('Добавление транзакции'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,7 +38,7 @@ class _TransactionCreationPageState extends State<TransactionCreationPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(labelText: 'Название'),
+                decoration: const InputDecoration(labelText: 'Название'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Пожалуйста введите название транзакции';
@@ -46,7 +50,7 @@ class _TransactionCreationPageState extends State<TransactionCreationPage> {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Сумма'),
+                decoration: const InputDecoration(labelText: 'Сумма'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -58,26 +62,51 @@ class _TransactionCreationPageState extends State<TransactionCreationPage> {
                   amount = double.parse(value!);
                 },
               ),
+              Row(
+                children: [
+                  DropdownButton(
+                    items: TransactionType.values
+                        .map((e) => DropdownMenuItem(
+                              value: e, // Добавьте это
+                              child: Text(e.name),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        transactionType = value!;
+                      });
+                    },
+                    value: transactionType,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  DropdownButton(
+                    items: TransactionCategory.values
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e.name),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        transactionCategory = value!;
+                      });
+                    },
+                    value: transactionCategory,
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          // Now you can create the transaction object with the entered data
-                          Transaction newTransaction = Transaction(
-                              title: title,
-                              amount: amount,
-                              date: date ?? DateTime.now());
-                          await transactionsRepo.createItem(newTransaction);
-                          // You can handle the new transaction as needed (e.g., add it to a list, save to a database, etc.)
-                          // Add your logic here
-                          Navigator.pop(context,
-                              newTransaction); // Close the creation page
-                        }
+                      onPressed: () {
+                        final navigator = Navigator.of(context);
+                        createTransaction(navigator: navigator);
                       },
                       child: const Text('Добавить'),
                     ),
@@ -89,5 +118,29 @@ class _TransactionCreationPageState extends State<TransactionCreationPage> {
         ),
       ),
     );
+  }
+
+  Future<void> createTransaction({required NavigatorState navigator}) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      final newTransaction = Transaction()
+        ..title = title
+        ..amount = amount
+        ..category = transactionCategory
+        ..type = transactionType
+        ..date = date ?? DateTime.now();
+
+      await transactionsRepo.createItem(newTransaction);
+
+      _backToTransactionsScreen(newTransaction, navigator: navigator);
+    }
+  }
+
+  void _backToTransactionsScreen(
+    Transaction createdTransaction, {
+    required NavigatorState navigator,
+  }) {
+    navigator.pop(createdTransaction);
   }
 }

@@ -4,15 +4,25 @@ part 'transaction.g.dart';
 
 @collection
 class Transaction {
-  final Id? id = Isar.autoIncrement;
+  Id? id = Isar.autoIncrement;
+  late String title;
+  late double amount;
+  late DateTime date;
+  @Enumerated(EnumType.name)
+  late TransactionType type;
+  @Enumerated(EnumType.name)
+  late TransactionCategory category;
+}
 
-  final String title;
-  final double amount;
-  final DateTime date;
+enum TransactionType {
+  income,
+  expense,
+}
 
-  const Transaction({
-    required this.title,
-    required this.amount,
-    required this.date,
-  });
+enum TransactionCategory {
+  none,
+  groceries,
+  food,
+  entertainment,
+  gas,
 }

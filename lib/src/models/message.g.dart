@@ -75,11 +75,11 @@ ChatMessage _chatMessageDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = ChatMessage(
-    sendTime: reader.readDateTime(offsets[0]),
-    text: reader.readString(offsets[1]),
-    userId: reader.readString(offsets[2]),
-  );
+  final object = ChatMessage();
+  object.id = id;
+  object.sendTime = reader.readDateTime(offsets[0]);
+  object.text = reader.readString(offsets[1]);
+  object.userId = reader.readString(offsets[2]);
   return object;
 }
 
@@ -102,7 +102,7 @@ P _chatMessageDeserializeProp<P>(
 }
 
 Id _chatMessageGetId(ChatMessage object) {
-  return object.id ?? Isar.autoIncrement;
+  return object.id;
 }
 
 List<IsarLinkBase<dynamic>> _chatMessageGetLinks(ChatMessage object) {
@@ -110,7 +110,9 @@ List<IsarLinkBase<dynamic>> _chatMessageGetLinks(ChatMessage object) {
 }
 
 void _chatMessageAttach(
-    IsarCollection<dynamic> col, Id id, ChatMessage object) {}
+    IsarCollection<dynamic> col, Id id, ChatMessage object) {
+  object.id = id;
+}
 
 extension ChatMessageQueryWhereSort
     on QueryBuilder<ChatMessage, ChatMessage, QWhere> {
@@ -192,24 +194,8 @@ extension ChatMessageQueryWhere
 
 extension ChatMessageQueryFilter
     on QueryBuilder<ChatMessage, ChatMessage, QFilterCondition> {
-  QueryBuilder<ChatMessage, ChatMessage, QAfterFilterCondition> idIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'id',
-      ));
-    });
-  }
-
-  QueryBuilder<ChatMessage, ChatMessage, QAfterFilterCondition> idIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'id',
-      ));
-    });
-  }
-
   QueryBuilder<ChatMessage, ChatMessage, QAfterFilterCondition> idEqualTo(
-      Id? value) {
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -219,7 +205,7 @@ extension ChatMessageQueryFilter
   }
 
   QueryBuilder<ChatMessage, ChatMessage, QAfterFilterCondition> idGreaterThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -232,7 +218,7 @@ extension ChatMessageQueryFilter
   }
 
   QueryBuilder<ChatMessage, ChatMessage, QAfterFilterCondition> idLessThan(
-    Id? value, {
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -245,8 +231,8 @@ extension ChatMessageQueryFilter
   }
 
   QueryBuilder<ChatMessage, ChatMessage, QAfterFilterCondition> idBetween(
-    Id? lower,
-    Id? upper, {
+    Id lower,
+    Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {

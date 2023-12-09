@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:your_financial_assistant_app/src/pages/chat.dart';
+import 'package:get/get.dart';
+import 'package:your_financial_assistant_app/src/pages/assistant.dart';
 import 'package:your_financial_assistant_app/src/pages/pages.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -11,12 +12,18 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
-  
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const TransactionsScreen(),
-    const ChatPage(),
-  ];
+
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      HomeScreen(changePageIndex: _changePageIndex),
+      const TransactionsScreen(),
+      const AssistantScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,21 +36,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             _currentIndex = index;
           });
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Главная',
+            icon: const Icon(Icons.home),
+            label: 'Home'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on),
-            label: 'Транзакции',
+            icon: const Icon(Icons.monetization_on),
+            label: 'Transactions'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Помощник',
+            icon: const Icon(Icons.chat),
+            label: 'Assistent'.tr,
           ),
         ],
       ),
     );
+  }
+
+  _changePageIndex(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }

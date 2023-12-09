@@ -4,15 +4,11 @@ part 'message.g.dart';
 
 @collection
 class ChatMessage {
-  final Id? id = Isar.autoIncrement;
+  Id id = Isar.autoIncrement;
 
-  final String userId;
-  final String text;
-  final DateTime sendTime;
+  late String userId;
 
-  const ChatMessage({
-    required this.text,
-    required this.userId,
-    required this.sendTime,
-  });
+  late String text;
+
+  late DateTime sendTime;
 }

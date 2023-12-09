@@ -4,23 +4,25 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:get/instance_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:your_financial_assistant_app/main.dart';
+import 'package:your_financial_assistant_app/src/repos/chat_service.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class AssistantScreen extends StatefulWidget {
+  const AssistantScreen({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<AssistantScreen> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
-  GlobalKey _key = GlobalKey();
+class _ChatPageState extends State<AssistantScreen> {
+  final ChatService _chatService = Get.find();
+  final GlobalKey _key = GlobalKey();
   List<types.Message> _messages = [];
   final List<types.User> _typingUsers = [];
 
@@ -29,11 +31,12 @@ class _ChatPageState extends State<ChatPage> {
   );
 
   final _chatUser = const types.User(
-      id: '82091008-a484-4a89-ae75-a22bf8d6f3ab',
-      firstName: "ChatGPT",
-      lastName: "",
-      imageUrl:
-          'https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png');
+    id: '82091008-a484-4a89-ae75-a22bf8d6f3ab',
+    firstName: "ChatGPT",
+    lastName: "",
+    imageUrl:
+        'https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png',
+  );
 
   @override
   void initState() {
@@ -207,22 +210,27 @@ class _ChatPageState extends State<ChatPage> {
     _addMessage(textMessage);
   }
 
-  sendMessageToChat(types.TextMessage msg) async {
-    _typingUsers.add(_chatUser);
-    final res = await chatService.sendQuestion(msg, _user.id, _chatUser.id);
-    _typingUsers.remove(_chatUser);
-    final textMessage = types.TextMessage(
-      author: _chatUser,
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-      id: const Uuid().v4(),
-      text: res,
-    );
-
-    _addMessage(textMessage);
+  Future<void> sendMessageToChat(types.TextMessage msg) async {
+    try {
+      _typingUsers.add(_chatUser);
+      final res = await _chatService.sendQuestion(msg, _user.id, _chatUser.id);
+      _typingUsers.remove(_chatUser);
+      for (final text in res) {
+        final textMessage = types.TextMessage(
+          author: _chatUser,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          id: const Uuid().v4(),
+          text: text,
+        );
+        _addMessage(textMessage);
+      }
+    } catch (err) {
+      _typingUsers.remove(_chatUser);
+    }
   }
 
   void _loadMessages() async {
-    final response = await chatService.getAllChatMessage();
+    final response = await _chatService.getChatMessages();
     final messages = response.map((e) {
       final author = e.userId == _user.id ? _user : _chatUser;
       return types.TextMessage(
