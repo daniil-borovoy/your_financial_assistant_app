@@ -4,9 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:your_financial_assistant_app/src/models/transaction.dart';
-import 'package:your_financial_assistant_app/src/pages/add_transaction.dart';
-import 'package:your_financial_assistant_app/src/pages/transactions_csv_import.dart';
 import 'package:your_financial_assistant_app/src/repos/transactions.dart';
+import 'package:your_financial_assistant_app/src/screens/add_transaction.dart';
+import 'package:your_financial_assistant_app/src/screens/transactions_csv_import.dart';
 import 'package:your_financial_assistant_app/src/widgets/loading_indicator.dart';
 import 'package:your_financial_assistant_app/src/widgets/transaction_card.dart';
 
@@ -54,7 +54,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Транзакции'),
+        title: Text('transactions'.tr),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -72,6 +72,14 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               return const PulseLoadingIndicator();
             },
             animateTransitions: true,
+            noItemsFoundIndicatorBuilder: (context) {
+              return Center(
+                  child: Text(
+                'no_transactions_found'.tr,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 18),
+              ));
+            },
           ),
         ),
       ),
@@ -96,7 +104,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           ),
           child: const Icon(Icons.add),
           backgroundColor: Colors.blue,
-          label: 'Add Transaction',
+          label: 'add_transaction'.tr,
           onTap: () {
             Navigator.of(context)
                 .push(TransactionCreationPage.create())
@@ -120,7 +128,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
           backgroundColor: Colors.green,
-          label: 'CSV Import'.tr,
+          label: 'csv_import'.tr,
           onTap: () {
             // CSV import logic
             Navigator.of(context)

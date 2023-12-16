@@ -5,8 +5,11 @@ class PulseLoadingIndicator extends StatefulWidget {
   final double size;
   final Color color;
 
-  const PulseLoadingIndicator(
-      {super.key, this.size = 150.0, this.color = Colors.grey});
+  const PulseLoadingIndicator({
+    super.key,
+    this.size = 150.0,
+    this.color = Colors.grey,
+  });
 
   @override
   State createState() => _PulseLoadingIndicatorState();
@@ -14,7 +17,7 @@ class PulseLoadingIndicator extends StatefulWidget {
 
 class _PulseLoadingIndicatorState extends State<PulseLoadingIndicator>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
+  late final AnimationController _animationController;
 
   @override
   void initState() {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:your_financial_assistant_app/src/pages/assistant.dart';
-import 'package:your_financial_assistant_app/src/pages/pages.dart';
+import 'package:your_financial_assistant_app/src/screens/assistant.dart';
+import 'package:your_financial_assistant_app/src/screens/screens.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -39,15 +39,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: 'Home'.tr,
+            label: 'home'.tr,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.monetization_on),
-            label: 'Transactions'.tr,
+            label: 'transactions'.tr,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.chat),
-            label: 'Assistent'.tr,
+            label: 'assistant'.tr,
           ),
         ],
       ),

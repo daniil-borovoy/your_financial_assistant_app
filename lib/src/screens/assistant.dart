@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:get/get.dart';
 import 'package:get/instance_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +12,7 @@ import 'package:mime/mime.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:your_financial_assistant_app/src/controllers/settings.dart';
 import 'package:your_financial_assistant_app/src/repos/chat_service.dart';
 
 class AssistantScreen extends StatefulWidget {
@@ -20,23 +22,23 @@ class AssistantScreen extends StatefulWidget {
   State<AssistantScreen> createState() => _ChatPageState();
 }
 
+const _currentUser = types.User(
+  id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
+);
+
+const _chatUser = types.User(
+  id: '82091008-a484-4a89-ae75-a22bf8d6f3ab',
+  firstName: "AI",
+  lastName: "Assistant",
+  imageUrl:
+      'https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png',
+);
+
 class _ChatPageState extends State<AssistantScreen> {
   final ChatService _chatService = Get.find();
   final GlobalKey _key = GlobalKey();
   List<types.Message> _messages = [];
   final List<types.User> _typingUsers = [];
-
-  final _user = const types.User(
-    id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
-  );
-
-  final _chatUser = const types.User(
-    id: '82091008-a484-4a89-ae75-a22bf8d6f3ab',
-    firstName: "ChatGPT",
-    lastName: "",
-    imageUrl:
-        'https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png',
-  );
 
   @override
   void initState() {
@@ -81,9 +83,9 @@ class _ChatPageState extends State<AssistantScreen> {
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Align(
+                child: Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: Text('Cancel'),
+                  child: Text('cancel'.tr),
                 ),
               ),
             ],
@@ -100,7 +102,7 @@ class _ChatPageState extends State<AssistantScreen> {
 
     if (result != null && result.files.single.path != null) {
       final message = types.FileMessage(
-        author: _user,
+        author: _currentUser,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         id: const Uuid().v4(),
         mimeType: lookupMimeType(result.files.single.path!),
@@ -125,7 +127,7 @@ class _ChatPageState extends State<AssistantScreen> {
       final image = await decodeImageFromList(bytes);
 
       final message = types.ImageMessage(
-        author: _user,
+        author: _currentUser,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         height: image.height.toDouble(),
         id: const Uuid().v4(),
@@ -200,7 +202,7 @@ class _ChatPageState extends State<AssistantScreen> {
 
   void _handleSendPressed(types.PartialText message) {
     final textMessage = types.TextMessage(
-      author: _user,
+      author: _currentUser,
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),
       text: message.text,
@@ -213,7 +215,8 @@ class _ChatPageState extends State<AssistantScreen> {
   Future<void> sendMessageToChat(types.TextMessage msg) async {
     try {
       _typingUsers.add(_chatUser);
-      final res = await _chatService.sendQuestion(msg, _user.id, _chatUser.id);
+      final res =
+          await _chatService.sendQuestion(msg, _currentUser.id, _chatUser.id);
       _typingUsers.remove(_chatUser);
       for (final text in res) {
         final textMessage = types.TextMessage(
@@ -232,7 +235,7 @@ class _ChatPageState extends State<AssistantScreen> {
   void _loadMessages() async {
     final response = await _chatService.getChatMessages();
     final messages = response.map((e) {
-      final author = e.userId == _user.id ? _user : _chatUser;
+      final author = e.userId == _currentUser.id ? _currentUser : _chatUser;
       return types.TextMessage(
         author: author,
         id: const Uuid().v4(),
@@ -255,23 +258,24 @@ class _ChatPageState extends State<AssistantScreen> {
                 child: Chat(
                   key: _key,
                   messages: _messages,
-                  onAttachmentPressed: _handleAttachmentPressed,
                   onMessageTap: _handleMessageTap,
                   onPreviewDataFetched: _handlePreviewDataFetched,
                   onSendPressed: _handleSendPressed,
                   showUserAvatars: true,
                   showUserNames: true,
-                  user: _user,
+                  user: _currentUser,
                   typingIndicatorOptions: TypingIndicatorOptions(
                     typingUsers: _typingUsers,
                     typingMode: TypingIndicatorMode.avatar,
                   ),
                   theme: DarkChatTheme(
                     primaryColor: Theme.of(context).shadowColor,
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     inputBackgroundColor: Theme.of(context).primaryColor,
                   ),
-                  l10n: const ChatL10nRu(),
+                  l10n: Get.locale == const Locale('ru')
+                      ? const ChatL10nRu()
+                      : const ChatL10nEn(),
                 ),
               ),
             ],

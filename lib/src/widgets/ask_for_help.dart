@@ -8,12 +8,21 @@ class AskAssistantButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Text(
-        'ask_assistant'.tr,
-        style: const TextStyle(
-          color: Colors.white,
+    return SizedBox(
+      width: double.infinity,
+      height: 60.0,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.help),
+            ),
+            Text('ask_assistant'.tr),
+          ],
         ),
       ),
     );

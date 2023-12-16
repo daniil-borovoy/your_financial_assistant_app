@@ -46,7 +46,7 @@ class ChatServiceImpl implements ChatService {
       data: {
         "messages": [
           {
-            "content": "You are a helpful assistant in transactions analysis.",
+            "content": systemRoleChatSetup,
             "role": "system"
           },
           ...previousMessages,

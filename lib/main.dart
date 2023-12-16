@@ -13,8 +13,13 @@ void main() async {
 
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
+    locale: Get.deviceLocale ?? const Locale('en'),
     translations: Messages(),
-    theme: ThemeData.dark(),
+    theme: ThemeData(
+      primarySwatch: Colors.indigo,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      brightness: Brightness.dark,
+    ),
     home: const MainNavigationScreen(),
   ));
 }

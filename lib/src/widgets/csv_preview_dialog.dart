@@ -6,7 +6,7 @@ import 'package:your_financial_assistant_app/src/widgets/csv_import_result.dart'
 class CsvPreviewDialog extends StatelessWidget {
   final Future<List<List<dynamic>>?> csvDataFuture;
 
-  CsvPreviewDialog({Key? key, required this.csvDataFuture}) : super(key: key);
+  const CsvPreviewDialog({super.key, required this.csvDataFuture});
 
   @override
   Widget build(BuildContext context) {
@@ -14,19 +14,19 @@ class CsvPreviewDialog extends StatelessWidget {
       future: csvDataFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('An error occurred while loading CSV preview.'),
+            title: Text('Error'.tr),
+            content: Text('An error occurred while loading CSV preview.'.tr),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: Text('OK'.tr),
               ),
             ],
           );
@@ -34,14 +34,14 @@ class CsvPreviewDialog extends StatelessWidget {
           return ResultDialog(data: snapshot.data ?? []);
         } else {
           return AlertDialog(
-            title: Text('No Data'),
-            content: Text('No CSV data to preview.'),
+            title: Text('no_data'.tr),
+            content: Text('no_data_to_preview'.tr),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: Text('OK'.tr),
               ),
             ],
           );
@@ -76,19 +76,19 @@ class _ResultDialogState extends State<ResultDialog> {
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
             return AlertDialog(
-              title: Text('Error'),
-              content: Text('An error occurred while loading CSV preview.'),
+              title: Text('error'.tr),
+              content: Text('loading_file_exception'.tr),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('OK'),
+                  child: Text('OK'.tr),
                 ),
               ],
             );
@@ -97,7 +97,7 @@ class _ResultDialogState extends State<ResultDialog> {
 
             if (isValid) {
               return AlertDialog(
-                title: const Text('CSV Preview'),
+                title: Text('csv_preview'.tr),
                 content: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: SingleChildScrollView(
@@ -113,7 +113,7 @@ class _ResultDialogState extends State<ResultDialog> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Text('Cancel'),
+                    child: Text('cancel'.tr),
                   ),
                   TextButton(
                     onPressed: () async {
@@ -127,36 +127,36 @@ class _ResultDialogState extends State<ResultDialog> {
                         ),
                       );
                     },
-                    child: const Text('Import'),
+                    child: Text('submit'.tr),
                   ),
                 ],
               );
             }
 
             return AlertDialog(
-              title: const Text('CSV Preview'),
+              title: Text('csv_preview'.tr),
               content: SingleChildScrollView(
-                child: Text("CSV have incorrect values!!!"),
+                child: Text("incorrect_csv_file".tr),
               ),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text('Ok'),
+                  child: Text('OK'.tr),
                 ),
               ],
             );
           }
           return AlertDialog(
-            title: Text('No Data'),
-            content: Text('No CSV data to preview.'),
+            title: Text('no_data'.tr),
+            content: Text('no_data_to_preview'.tr),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text('OK'),
+                child: Text('OK'.tr),
               ),
             ],
           );

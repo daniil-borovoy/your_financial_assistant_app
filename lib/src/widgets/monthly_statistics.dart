@@ -15,16 +15,16 @@ class TransactionStatisticsWidget extends StatelessWidget {
       children: [
         const SizedBox(height: 30),
         Text(
-          'Transaction Statistics'.tr,
+          'transaction_statistics'.tr,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 30),
         StatisticCard(
-          title: 'Total Amount',
+          title: 'total_amount'.tr,
           value: _transactionsRepo.getTotalAmount(),
         ),
         StatisticCard(
-          title: 'Average Amount',
+          title: 'average_amount'.tr,
           value: _transactionsRepo.getAverageAmount(),
         ),
       ],
@@ -34,7 +34,7 @@ class TransactionStatisticsWidget extends StatelessWidget {
 
 class StatisticCard extends StatelessWidget {
   final String title;
-  final Future<dynamic> value;
+  final Future<double> value;
 
   const StatisticCard({super.key, required this.title, required this.value});
 
@@ -65,7 +65,7 @@ class StatisticCard extends StatelessWidget {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   return Text(
-                    snapshot.data.toString(),
+                    snapshot.data!.toStringAsFixed(2),
                     style: const TextStyle(fontSize: 16),
                   );
                 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 import 'package:your_financial_assistant_app/src/models/transaction.dart';
 import 'package:your_financial_assistant_app/src/repos/base_crud.dart';
@@ -83,7 +84,9 @@ final class TransactionsRepo implements BaseCrudRepo<Transaction> {
       return null;
     } catch (error) {
       // Handle errors during CSV import
-      print("CSV Import Error: $error");
+      if (kDebugMode) {
+        print("CSV Import Error: $error");
+      }
       return null;
     }
   }
@@ -148,5 +151,21 @@ final class TransactionsRepo implements BaseCrudRepo<Transaction> {
     }
 
     return monthlyStatistics;
+  }
+
+  Future<Map<TransactionCategory, double>> getTransactionCategoryTotals() async {
+    final transactions = await _isar.transactions.where().findAll();
+
+    Map<TransactionCategory, double> categoryTotals = {};
+
+    for (var transaction in transactions) {
+      if (categoryTotals.containsKey(transaction.category)) {
+        categoryTotals[transaction.category] = transaction.amount + (categoryTotals[transaction.category] ?? 0);
+      } else {
+        categoryTotals[transaction.category] = transaction.amount;
+      }
+    }
+
+    return categoryTotals;
   }
 }

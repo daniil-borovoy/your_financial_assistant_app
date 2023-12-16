@@ -16,17 +16,17 @@ class TransactionsCSVImportScreen extends StatelessWidget {
 
   // List of common delimiters with labels
   final List<Map<String, String>> commonDelimiters = [
-    {'label': 'Comma (,)', 'value': ','},
-    {'label': 'Semicolon (;)', 'value': ';'},
-    {'label': 'Pipe (|)', 'value': '|'},
-    {'label': 'Tab (\t)', 'value': '\t'},
+    {'label': 'comma_delimiter'.tr, 'value': ','},
+    {'label': 'semicolon_delimiter'.tr, 'value': ';'},
+    {'label': 'pipe_delimiter'.tr, 'value': '|'},
+    {'label': 'tab_delimiter'.tr, 'value': '\t'},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CSV Import'.tr),
+        title: Text('csv_import'.tr),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -36,9 +36,9 @@ class TransactionsCSVImportScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Choose a CSV file to import transactions:',
-                style: TextStyle(fontSize: 18.0),
+              Text(
+                'csv_import_description'.tr,
+                style: const TextStyle(fontSize: 18.0),
               ),
               const SizedBox(height: 10.0),
               ElevatedButton(
@@ -56,16 +56,18 @@ class TransactionsCSVImportScreen extends StatelessWidget {
                   // Add logic to choose a CSV file
                   // You can use packages like file_picker or image_picker for file selection
                 },
-                child: const Text('Choose File'),
+                child: Text('choose_file'.tr),
               ),
               const SizedBox(height: 20.0),
               const Divider(),
               const SizedBox(height: 20.0),
-              Text("Import setup", style: TextStyle(fontSize: 20)),
+              Text('import_setup'.tr, style: const TextStyle(fontSize: 20)),
               const SizedBox(height: 20.0),
               // Add a DropdownButtonFormField to select the delimiter
-              const Text("Choose column delimiter",
-                  style: TextStyle(fontSize: 16)),
+              Text(
+                'choose_column_delimiter'.tr,
+                style: const TextStyle(fontSize: 16),
+              ),
               DropdownButtonFormField<Map<String, String>>(
                 value: commonDelimiters.first, // Default delimiter
                 onChanged: (value) {
@@ -95,51 +97,42 @@ class CSVImportTips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'CSV Import Tips 💡',
-          style: TextStyle(fontSize: 20),
+          'csv_tips'.tr,
+          style: const TextStyle(fontSize: 20),
         ),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         // ------------
         TextTipWithTitle(
-          title: 'Column Order:',
-          description:
-              'Make sure your CSV file has columns in the correct order: title, amount, date, category, type.',
+          title: 'column_order_tip'.tr,
+          description: 'column_order_tip_description'.tr,
         ),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         TextTipWithTitle(
-          title: 'Data Rows:',
-          description:
-              'Enter your transaction data in rows below the column headers.',
+          title: 'data_rows_tip'.tr,
+          description: 'data_rows_tip_description'.tr,
         ),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         TextTipWithTitle(
-          title: 'Date Format:',
-          description:
-              "'Use a consistent date format for the 'date' column (e.g., DD.MM.YYYY).'",
+          title: 'date_format_tip'.tr,
+          description: 'date_format_tip_description'.tr,
         ),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         TextTipWithTitle(
-          title: 'Missing Values:',
-          description:
-              "Leave cells empty for optional fields (e.g., category in the last row).",
+          title: 'missing_values_tip'.tr,
+          description: 'missing_values_tip_description'.tr,
         ),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
         TextTipWithTitle(
-          title: 'Delimiter:',
-          description:
-              "Select the correct delimiter (comma, semicolon, pipe, or tab) before importing.",
+          title: 'delimiter_tip'.tr,
+          description: 'delimiter_tip_description'.tr,
         ),
-        SizedBox(height: 20.0),
-        // -----------
-        Text(
-            "Ensure your CSV file aligns with this structure for a smooth import process. If in doubt, refer to this example or consult the documentation."),
-        SizedBox(height: 20.0),
+        const SizedBox(height: 20.0),
       ],
     );
   }
@@ -149,8 +142,11 @@ class TextTipWithTitle extends StatelessWidget {
   final String title;
   final String description;
 
-  const TextTipWithTitle(
-      {super.key, required this.title, required this.description});
+  const TextTipWithTitle({
+    super.key,
+    required this.title,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -159,13 +155,13 @@ class TextTipWithTitle extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
           textAlign: TextAlign.start,
         ),
         const SizedBox(height: 20.0),
         Text(
           description,
-          style: TextStyle(fontSize: 14),
+          style: const TextStyle(fontSize: 14),
         ),
       ],
     );
